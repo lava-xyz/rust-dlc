@@ -5,7 +5,12 @@ use crate::{LookupResult, Node};
 use dlc::Error;
 
 /// Structure to store data inserted and looked-up based on digit paths.
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(
+    feature = "use-serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct DigitTrie<T> {
     /// Use the arena allocated approach which makes it easier to
     /// satisfy the borrow checker.  
@@ -128,13 +133,23 @@ impl<'a, T> DigitTrieIter<'a, T> {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(
+    feature = "use-serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 struct DigitLeaf<T> {
     data: T,
     prefix: Vec<usize>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(
+    feature = "use-serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 struct DigitNode<T> {
     children: Vec<Option<usize>>,
     prefix: Vec<usize>,
@@ -259,7 +274,7 @@ impl<'a, T> Iterator for DigitTrieIter<'a, T> {
                     while cur_child < (self.trie.base as isize) {
                         self.index_stack.push((Some(cur_index), cur_child + 1));
                         self.index_stack
-                            .push((cur_children[(cur_child as usize)], -1));
+                            .push((cur_children[cur_child as usize], -1));
                         match self.next() {
                             None => {
                                 self.index_stack.pop();

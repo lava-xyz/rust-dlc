@@ -52,7 +52,12 @@ pub struct LookupResult<'a, TValue, TPath> {
 }
 
 /// Enum representing the different type of nodes in a tree
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[cfg_attr(
+    feature = "use-serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub enum Node<TLeaf, TNode> {
     /// None is only used as a placeholder when taking mutable ownership of a
     /// node during insertion.
@@ -64,6 +69,11 @@ pub enum Node<TLeaf, TNode> {
 }
 
 #[derive(Eq, PartialEq, Debug, Clone)]
+#[cfg_attr(
+    feature = "serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 /// Structure that stores the indexes at which the CET and adaptor signature
 /// related to a given outcome are located in CET and adaptor signatures arrays
 /// respectively.
@@ -74,7 +84,7 @@ pub struct RangeInfo {
     pub adaptor_index: usize,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 #[cfg_attr(
     feature = "use-serde",
     derive(Serialize, Deserialize),

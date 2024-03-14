@@ -149,7 +149,7 @@ impl DlcTransactions {
 /// Contains info about a utxo used for funding a DLC contract
 #[derive(Clone, Debug)]
 #[cfg_attr(
-    feature = "serde",
+    feature = "use-serde",
     derive(Serialize, Deserialize),
     serde(rename_all = "camelCase")
 )]
@@ -227,7 +227,7 @@ impl fmt::Display for Error {
 /// messages.
 #[derive(Clone, Debug)]
 #[cfg_attr(
-    feature = "serde",
+    feature = "use-serde",
     derive(Serialize, Deserialize),
     serde(rename_all = "camelCase")
 )]

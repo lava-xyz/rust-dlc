@@ -13,7 +13,12 @@ use dlc::{Error, RangePayout};
 /// Data structure used to store adaptor signature information for numerical
 /// outcome DLC with multiple oracles where some difference between the outcomes
 /// of each oracle can be supported.
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
+#[cfg_attr(
+    feature = "use-serde",
+    derive(serde::Serialize, serde::Deserialize),
+    serde(rename_all = "camelCase")
+)]
 pub struct MultiOracleTrieWithDiff {
     /// The underlying trie of trie
     pub multi_trie: MultiTrie<RangeInfo>,
