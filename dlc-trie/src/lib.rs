@@ -252,7 +252,7 @@ fn sign_helper<T: Iterator<Item = TrieIterInfo>>(
             )?;
             let adaptor_sig = dlc::create_cet_adaptor_sig_from_point(
                 secp,
-                &cets[x.value.cet_index],
+                cets.get(x.value.cet_index).ok_or(Error::InvalidArgument)?,
                 &adaptor_point,
                 fund_privkey,
                 funding_script_pubkey,
@@ -286,7 +286,7 @@ fn sign_helper<T: Iterator<Item = TrieIterInfo>>(
             )?;
             let adaptor_sig = dlc::create_cet_adaptor_sig_from_point(
                 secp,
-                &cets[x.value.cet_index],
+                cets.get(x.value.cet_index).ok_or(Error::InvalidArgument)?,
                 &adaptor_point,
                 fund_privkey,
                 funding_script_pubkey,
@@ -314,8 +314,10 @@ fn verify_helper<T: Iterator<Item = TrieIterInfo>>(
     for x in trie_info {
         let adaptor_point =
             utils::get_adaptor_point_for_indexed_paths(&x.indexes, &x.paths, precomputed_points)?;
-        let adaptor_sig = adaptor_sigs[x.value.adaptor_index];
-        let cet = &cets[x.value.cet_index];
+        let adaptor_sig = adaptor_sigs
+            .get(x.value.adaptor_index)
+            .ok_or(Error::InvalidArgument)?;
+        let cet = &cets.get(x.value.cet_index).ok_or(Error::InvalidArgument)?;
         if x.value.adaptor_index > max_adaptor_index {
             max_adaptor_index = x.value.adaptor_index;
         }
@@ -351,11 +353,13 @@ fn verify_helper<T: Iterator<Item = TrieIterInfo>>(
     trie_info.par_iter().try_for_each(|x| {
         let adaptor_point =
             utils::get_adaptor_point_for_indexed_paths(&x.indexes, &x.paths, precomputed_points)?;
-        let adaptor_sig = adaptor_sigs[x.value.adaptor_index];
-        let cet = &cets[x.value.cet_index];
+        let adaptor_sig = adaptor_sigs
+            .get(x.value.adaptor_index)
+            .ok_or(Error::InvalidArgument)?;
+        let cet = &cets.get(x.value.cet_index).ok_or(Error::InvalidArgument)?;
         dlc::verify_cet_adaptor_sig_from_point(
             secp,
-            &adaptor_sig,
+            adaptor_sig,
             cet,
             &adaptor_point,
             fund_pubkey,
